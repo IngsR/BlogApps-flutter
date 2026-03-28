@@ -12,7 +12,13 @@ import 'package:blogapps/features/settings/presentation/bloc/settings_state.dart
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initDependencies();
+  
+  try {
+    await initDependencies();
+  } catch (e) {
+    debugPrint('Failed to initialize dependencies: $e');
+  }
+  
   runApp(const MyApp());
 }
 

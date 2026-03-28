@@ -1,6 +1,6 @@
 import 'package:blogapps/features/home/data/models/blog_post_model.dart';
 import 'package:blogapps/features/home/data/models/category_model.dart';
-import 'package:blogapps/features/home/data/sources/home_local_data_source.dart';
+import 'package:blogapps/features/home/data/sources/home_remote_data_source.dart';
 
 abstract class HomeRepository {
   Future<List<BlogPost>> getLatestPosts({
@@ -13,9 +13,9 @@ abstract class HomeRepository {
 }
 
 class HomeRepositoryImpl implements HomeRepository {
-  final HomeLocalDataSource localDataSource;
+  final HomeRemoteDataSource remoteDataSource;
 
-  HomeRepositoryImpl(this.localDataSource);
+  HomeRepositoryImpl(this.remoteDataSource);
 
   @override
   Future<List<BlogPost>> getLatestPosts({
@@ -23,7 +23,7 @@ class HomeRepositoryImpl implements HomeRepository {
     int limit = 10,
     String? categoryId,
   }) {
-    return localDataSource.getLatestPosts(
+    return remoteDataSource.getLatestPosts(
       offset: offset, 
       limit: limit,
       categoryId: categoryId,
@@ -32,11 +32,11 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<List<BlogPost>> getFeaturedPosts() {
-    return localDataSource.getFeaturedPosts();
+    return remoteDataSource.getFeaturedPosts();
   }
 
   @override
   Future<List<Category>> getCategories() {
-    return localDataSource.getCategories();
+    return remoteDataSource.getCategories();
   }
 }
