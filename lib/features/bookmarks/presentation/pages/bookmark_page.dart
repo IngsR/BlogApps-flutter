@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:blogapps/core/theme/app_effects.dart';
 import 'package:blogapps/features/bookmarks/presentation/bloc/bookmark_bloc.dart';
 import 'package:blogapps/features/home/presentation/widgets/post_list_card.dart';
 import 'package:blogapps/features/post_detail/presentation/pages/post_detail_page.dart';
@@ -13,7 +15,10 @@ class BookmarkPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saved Stories'),
+        title: const GradientText(
+          'Saved Stories',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2),
         centerTitle: false,
       ),
       body: BlocBuilder<BookmarkBloc, BookmarkState>(
@@ -25,24 +30,25 @@ class BookmarkPage extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.bookmark_border_rounded,
-                    size: 64,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                  ),
-                  const SizedBox(height: 16),
+                    size: 80,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+                    .moveY(begin: -10, end: 10, duration: 2.seconds, curve: Curves.easeInOut),
+                  const SizedBox(height: 24),
                   Text(
                     'No bookmarks yet',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                      fontWeight: FontWeight.bold,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w800,
                     ),
-                  ),
-                  const SizedBox(height: 8),
+                  ).animate().fadeIn(delay: 200.ms),
+                  const SizedBox(height: 12),
                   Text(
                     'Stories you save will appear here.',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
-                  ),
+                  ).animate().fadeIn(delay: 400.ms),
                 ],
               ),
             );
@@ -69,7 +75,7 @@ class BookmarkPage extends StatelessWidget {
                     );
                   },
                 ),
-              );
+              ).animate().fadeIn(delay: (200 + (index * 50)).ms).slideX(begin: 0.1);
             },
           );
         },

@@ -28,21 +28,12 @@ class ThemeSelectionCard extends StatelessWidget {
         width: 100,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.2),
             width: 2,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : [],
         ),
         child: Column(
           children: [

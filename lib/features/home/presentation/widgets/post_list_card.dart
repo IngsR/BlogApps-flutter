@@ -23,16 +23,9 @@ class PostListCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          color: theme.cardTheme.color,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
         ),
         child: Row(
           children: [

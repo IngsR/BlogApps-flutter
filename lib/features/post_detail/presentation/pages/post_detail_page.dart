@@ -11,6 +11,8 @@ import 'package:blogapps/features/home/presentation/widgets/post_list_card.dart'
 import 'package:blogapps/features/home/presentation/bloc/home_state.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:blogapps/core/theme/app_effects.dart';
 
 class PostDetailPage extends StatefulWidget {
   final BlogPost post;
@@ -160,30 +162,31 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             orElse: () => const Category(id: '', name: 'General', slug: 'general'),
                           );
                           return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(20),
+                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              category.name,
+                              category.name.toUpperCase(),
                               style: TextStyle(
-                                color: theme.colorScheme.onPrimaryContainer,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.5,
                               ),
                             ),
                           );
                         },
-                      ),
+                      ).animate().fadeIn(delay: 200.ms),
                       const SizedBox(height: 16),
-                      Text(
+                      GradientText(
                         widget.post.title,
                         style: theme.textTheme.displaySmall?.copyWith(
-                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w800,
                           height: 1.2,
                         ),
-                      ),
+                      ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
                       const SizedBox(height: 24),
                       Row(
                         children: [
@@ -220,14 +223,15 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             onPressed: () {},
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(12),
                               ),
+                              side: BorderSide(color: theme.colorScheme.primary),
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                             ),
                             child: const Text('Follow'),
                           ),
                         ],
-                      ),
+                      ).animate().fadeIn(delay: 400.ms),
                       const SizedBox(height: 24),
                       const Divider(),
                       const SizedBox(height: 24),
@@ -236,11 +240,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         selectable: true,
                         styleSheet: MarkdownStyleSheet(
                           p: theme.textTheme.bodyLarge?.copyWith(
-                            height: 1.6,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                            height: 1.8,
+                            fontSize: 18,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
                           ),
-                          h1: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-                          h2: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                          h1: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
+                          h2: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
                           code: TextStyle(
                             backgroundColor: theme.colorScheme.surfaceContainerHighest,
                             fontFamily: 'monospace',
@@ -248,11 +253,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           ),
                           codeblockDecoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
                           ),
                           blockquote: TextStyle(
                             color: theme.colorScheme.primary,
                             fontStyle: FontStyle.italic,
+                            fontSize: 18,
                           ),
                           blockquoteDecoration: BoxDecoration(
                             border: Border(
@@ -260,7 +267,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             ),
                           ),
                         ),
-                      ),
+                      ).animate().fadeIn(delay: 600.ms),
                       const SizedBox(height: 48),
                       Text(
                         'Related Posts',
@@ -345,12 +352,8 @@ class _CircleActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.black26,
-        shape: BoxShape.circle,
-      ),
+    return GlassCard(
+      borderRadius: BorderRadius.circular(12),
       child: IconButton(
         icon: Icon(icon, color: iconColor ?? Colors.white, size: 20),
         onPressed: onPressed,

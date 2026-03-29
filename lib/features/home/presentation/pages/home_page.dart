@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:blogapps/core/theme/app_effects.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_bloc.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_event.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_state.dart';
@@ -151,22 +153,24 @@ class _HomeViewState extends State<HomeView> {
                 SliverAppBar(
                   floating: true,
                   stretch: true,
-                  title: const Text('Discover'),
+                  centerTitle: false,
+                  title: Image.asset(
+                    'assets/BLog.png',
+                    height: 32,
+                    fit: BoxFit.contain,
+                  ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
                   actions: [
                     IconButton(
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const SearchPage()),
                       ),
-                      icon: Container(
+                      icon: GlassCard(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
+                        borderRadius: BorderRadius.circular(12),
                         child: Icon(Icons.search_rounded, color: theme.colorScheme.primary, size: 20),
                       ),
-                    ),
+                    ).animate().fadeIn(duration: 800.ms).scale(),
                     const SizedBox(width: 16),
                   ],
                 ),
@@ -181,7 +185,7 @@ class _HomeViewState extends State<HomeView> {
                         onCategorySelected: (id) {
                           context.read<HomeBloc>().add(HomeFilterByCategory(id));
                         },
-                      ),
+                      ).animate().fadeIn(delay: 200.ms),
                       if (state.featuredPosts.isNotEmpty && state.selectedCategoryId == null) ...[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
@@ -192,7 +196,7 @@ class _HomeViewState extends State<HomeView> {
                               TextButton(onPressed: () {}, child: const Text('See all')),
                             ],
                           ),
-                        ),
+                        ).animate().fadeIn(delay: 300.ms),
                         SizedBox(
                           height: 260,
                           child: ListView.builder(
@@ -207,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
                                   context,
                                   MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
                                 ),
-                              );
+                              ).animate().fadeIn(delay: (400 + (index * 100)).ms).slideX(begin: 0.1);
                             },
                           ),
                         ),
@@ -215,7 +219,7 @@ class _HomeViewState extends State<HomeView> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
                         child: Text('Latest Updates', style: theme.textTheme.titleLarge),
-                      ),
+                      ).animate().fadeIn(delay: 500.ms),
                     ],
                   ),
                 ),
@@ -240,7 +244,7 @@ class _HomeViewState extends State<HomeView> {
                                 MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
                               ),
                             ),
-                          );
+                          ).animate().fadeIn(delay: (600 + (index * 50)).ms).slideY(begin: 0.1);
                         },
                         childCount: state.latestPosts.length + (state.isLoadingMore ? 1 : 0),
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:blogapps/features/home/data/models/blog_post_model.dart';
+import 'package:blogapps/core/theme/app_effects.dart';
 
 class FeaturedPostCard extends StatelessWidget {
   final BlogPost post;
@@ -62,19 +63,16 @@ class FeaturedPostCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
+                  GlassCard(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    borderRadius: BorderRadius.circular(12),
                     child: const Text(
-                      'Featured',
+                      'FEATURED',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
                       ),
                     ),
                   ),
@@ -105,9 +103,9 @@ class FeaturedPostCard extends StatelessWidget {
                       Text(
                         post.authorName ?? 'Anonymous',
                         style: const TextStyle(
-                          color: Colors.white70,
+                          color: Colors.white,
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],

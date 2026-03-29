@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:blogapps/core/theme/app_effects.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_event.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_state.dart';
@@ -13,41 +15,50 @@ class SettingsPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const GradientText(
+          'Settings',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2),
+      ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          _SectionTitle(title: 'Personalization'),
+          _SectionTitle(title: 'Personalization').animate().fadeIn(delay: 200.ms),
           BlocBuilder<SettingsBloc, SettingsState>(
             builder: (context, state) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ThemeSelectionCard(
-                    mode: ThemeMode.light,
-                    icon: Icons.light_mode_rounded,
-                    label: 'Light',
-                    isSelected: state.themeMode == ThemeMode.light,
-                    onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.light)),
-                  ),
-                  ThemeSelectionCard(
-                    mode: ThemeMode.dark,
-                    icon: Icons.dark_mode_rounded,
-                    label: 'Dark',
-                    isSelected: state.themeMode == ThemeMode.dark,
-                    onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.dark)),
-                  ),
-                  ThemeSelectionCard(
-                    mode: ThemeMode.system,
-                    icon: Icons.settings_brightness_rounded,
-                    label: 'System',
-                    isSelected: state.themeMode == ThemeMode.system,
-                    onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.system)),
-                  ),
-                ],
+              return GlassCard(
+                padding: const EdgeInsets.all(8),
+                borderRadius: BorderRadius.circular(24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ThemeSelectionCard(
+                      mode: ThemeMode.light,
+                      icon: Icons.light_mode_rounded,
+                      label: 'Light',
+                      isSelected: state.themeMode == ThemeMode.light,
+                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.light)),
+                    ),
+                    ThemeSelectionCard(
+                      mode: ThemeMode.dark,
+                      icon: Icons.dark_mode_rounded,
+                      label: 'Dark',
+                      isSelected: state.themeMode == ThemeMode.dark,
+                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.dark)),
+                    ),
+                    ThemeSelectionCard(
+                      mode: ThemeMode.system,
+                      icon: Icons.settings_brightness_rounded,
+                      label: 'System',
+                      isSelected: state.themeMode == ThemeMode.system,
+                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.system)),
+                    ),
+                  ],
+                ),
               );
             },
-          ),
+          ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
           const SizedBox(height: 24),
           
           _SectionTitle(title: 'Accessibility'),
