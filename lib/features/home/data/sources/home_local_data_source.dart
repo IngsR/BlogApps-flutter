@@ -1,67 +1,57 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:blogapps/features/home/data/models/blog_post_model.dart';
 import 'package:blogapps/features/home/data/models/category_model.dart';
 
 abstract class HomeLocalDataSource {
-  Future<List<BlogPost>> getLatestPosts({
-    int offset = 0, 
-    int limit = 10,
-    String? categoryId,
-  });
-  Future<List<BlogPost>> getFeaturedPosts();
-  Future<List<Category>> getCategories();
+  Future<void> cacheLatestPosts(List<BlogPostModel> posts);
+  List<BlogPostModel> getCachedLatestPosts();
+  Future<void> cacheFeaturedPosts(List<BlogPostModel> posts);
+  List<BlogPostModel> getCachedFeaturedPosts();
+  Future<void> cacheCategories(List<CategoryModel> categories);
+  List<CategoryModel> getCachedCategories();
 }
 
 class HomeLocalDataSourceImpl implements HomeLocalDataSource {
-  final String jsonPath = 'assets/data/blogs.json';
+  final Box<BlogPostModel> latestPostsBox;
+  final Box<BlogPostModel> featuredPostsBox;
+  final Box<CategoryModel> categoriesBox;
+
+  HomeLocalDataSourceImpl({
+    required this.latestPostsBox,
+    required this.featuredPostsBox,
+    required this.categoriesBox,
+  });
 
   @override
-  Future<List<BlogPost>> getLatestPosts({
-    int offset = 0, 
-    int limit = 10,
-    String? categoryId,
-  }) async {
-    final String response = await rootBundle.loadString(jsonPath);
-    final data = await json.decode(response);
-    final List postsJson = data['posts'];
-    
-    var posts = postsJson
-        .map((post) => BlogPost.fromJson(post))
-        .toList();
-
-    // Filter by category if provided
-    if (categoryId != null) {
-      posts = posts.where((p) => p.categoryId == categoryId).toList();
-    }
-        
-    // Apply limit and offset locally
-    final end = (offset + limit) > posts.length ? posts.length : (offset + limit);
-    if (offset >= posts.length) return [];
-    
-    return posts.sublist(offset, end);
+  Future<void> cacheLatestPosts(List<BlogPostModel> posts) async {
+    await latestPostsBox.clear();
+    await latestPostsBox.addAll(posts);
   }
 
   @override
-  Future<List<BlogPost>> getFeaturedPosts() async {
-    final String response = await rootBundle.loadString(jsonPath);
-    final data = await json.decode(response);
-    final List postsJson = data['posts'];
-    
-    return postsJson
-        .where((post) => post['is_featured'] == true)
-        .map((post) => BlogPost.fromJson(post))
-        .toList();
+  List<BlogPostModel> getCachedLatestPosts() {
+    return latestPostsBox.values.toList();
   }
 
   @override
-  Future<List<Category>> getCategories() async {
-    final String response = await rootBundle.loadString(jsonPath);
-    final data = await json.decode(response);
-    final List categoriesJson = data['categories'];
-    
-    return categoriesJson
-        .map((category) => Category.fromJson(category))
-        .toList();
+  Future<void> cacheFeaturedPosts(List<BlogPostModel> posts) async {
+    await featuredPostsBox.clear();
+    await featuredPostsBox.addAll(posts);
+  }
+
+  @override
+  List<BlogPostModel> getCachedFeaturedPosts() {
+    return featuredPostsBox.values.toList();
+  }
+
+  @override
+  Future<void> cacheCategories(List<CategoryModel> categories) async {
+    await categoriesBox.clear();
+    await categoriesBox.addAll(categories);
+  }
+
+  @override
+  List<CategoryModel> getCachedCategories() {
+    return categoriesBox.values.toList();
   }
 }

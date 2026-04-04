@@ -1,7 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:blogapps/features/bookmarks/data/models/bookmark_model.dart';
+import 'package:blogapps/core/common/entities/blog_post.dart';
 import 'package:blogapps/features/bookmarks/domain/repositories/bookmark_repository.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class BookmarkEvent extends Equatable {
   const BookmarkEvent();
@@ -12,14 +12,14 @@ abstract class BookmarkEvent extends Equatable {
 class LoadBookmarks extends BookmarkEvent {}
 
 class ToggleBookmark extends BookmarkEvent {
-  final Bookmark bookmark;
-  const ToggleBookmark(this.bookmark);
+  final BlogPost post;
+  const ToggleBookmark(this.post);
   @override
-  List<Object?> get props => [bookmark];
+  List<Object?> get props => [post];
 }
 
 class BookmarkState extends Equatable {
-  final List<Bookmark> bookmarks;
+  final List<BlogPost> bookmarks;
   const BookmarkState({this.bookmarks = const []});
   @override
   List<Object?> get props => [bookmarks];
@@ -34,10 +34,10 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     });
 
     on<ToggleBookmark>((event, emit) async {
-      if (repository.isBookmarked(event.bookmark.id)) {
-        await repository.removeBookmark(event.bookmark.id);
+      if (repository.isBookmarked(event.post.id)) {
+        await repository.removeBookmark(event.post.id);
       } else {
-        await repository.saveBookmark(event.bookmark);
+        await repository.saveBookmark(event.post);
       }
       emit(BookmarkState(bookmarks: repository.getBookmarks()));
     });

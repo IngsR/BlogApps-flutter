@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:blogapps/features/home/data/models/category_model.dart';
+import 'package:blogapps/core/common/entities/category.dart';
 
 class CategoryTabs extends StatelessWidget {
   final List<Category> categories;
@@ -16,7 +16,7 @@ class CategoryTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52, // Slightly increased height
+      height: 52,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -29,7 +29,7 @@ class CategoryTabs extends StatelessWidget {
               : selectedCategoryId == category?.id;
           
           return Padding(
-            padding: const EdgeInsets.only(right: 8, bottom: 4), // Added slight bottom padding for shadow
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
             child: _CategoryChip(
               label: isAll ? 'All Topics' : category!.name,
               isSelected: isSelected,
@@ -58,7 +58,6 @@ class _CategoryChip extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    // Warna background untuk state tidak terpilih
     final unselectedBg = isDark 
         ? Colors.white.withValues(alpha: 0.1)
         : Colors.white;
@@ -69,7 +68,7 @@ class _CategoryChip extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque, // Ensure clicks are captured reliably
+      behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

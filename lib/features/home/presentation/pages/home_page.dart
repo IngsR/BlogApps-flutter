@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:blogapps/core/common/widgets/organisms/featured_post_card.dart';
+import 'package:blogapps/core/common/widgets/organisms/post_list_card.dart';
+import 'package:blogapps/core/common/widgets/organisms/home_shimmer.dart';
+import 'package:blogapps/core/common/widgets/organisms/category_tabs.dart';
 import 'package:blogapps/core/theme/app_effects.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_bloc.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_event.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_state.dart';
-import 'package:blogapps/features/home/presentation/widgets/featured_post_card.dart';
-import 'package:blogapps/features/home/presentation/widgets/post_list_card.dart';
-import 'package:blogapps/features/home/presentation/widgets/home_shimmer.dart';
-import 'package:blogapps/features/home/presentation/widgets/category_tabs.dart';
 import 'package:blogapps/features/post_detail/presentation/pages/post_detail_page.dart';
 import 'package:blogapps/features/search/presentation/pages/search_page.dart';
 import 'package:blogapps/features/bookmarks/presentation/pages/bookmark_page.dart';
@@ -107,15 +107,10 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _onScroll() {
-    // Show/hide back to top button
     if (_scrollController.offset > 400 && !_showBackToTop) {
       setState(() => _showBackToTop = true);
     } else if (_scrollController.offset <= 400 && _showBackToTop) {
       setState(() => _showBackToTop = false);
-    }
-
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
-      context.read<HomeBloc>().add(HomeLoadMorePosts());
     }
   }
 
@@ -186,39 +181,43 @@ class _HomeViewState extends State<HomeView> {
                           context.read<HomeBloc>().add(HomeFilterByCategory(id));
                         },
                       ).animate().fadeIn(delay: 200.ms),
-                      if (state.featuredPosts.isNotEmpty && state.selectedCategoryId == null) ...[
+                      if (state.featuredPosts.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Featured Stories', style: theme.textTheme.titleLarge),
+                              Text('Featured Stories', 
+                                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                               TextButton(onPressed: () {}, child: const Text('See all')),
                             ],
                           ),
                         ).animate().fadeIn(delay: 300.ms),
-                        SizedBox(
-                          height: 260,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount: state.featuredPosts.length,
-                            itemBuilder: (context, index) {
-                              final post = state.featuredPosts[index];
-                              return FeaturedPostCard(
-                                post: post,
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
-                                ),
-                              ).animate().fadeIn(delay: (400 + (index * 100)).ms).slideX(begin: 0.1);
-                            },
+                        RepaintBoundary(
+                          child: SizedBox(
+                            height: 260,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              itemCount: state.featuredPosts.length,
+                              itemBuilder: (context, index) {
+                                final post = state.featuredPosts[index];
+                                return FeaturedPostCard(
+                                  post: post,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
-                        child: Text('Latest Updates', style: theme.textTheme.titleLarge),
+                        child: Text('Latest Updates', 
+                          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                       ).animate().fadeIn(delay: 500.ms),
                     ],
                   ),
@@ -240,9 +239,6 @@ class _HomeViewState extends State<HomeView> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          if (index >= state.latestPosts.length) {
-                            return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()));
-                          }
                           final post = state.latestPosts[index];
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
@@ -253,9 +249,9 @@ class _HomeViewState extends State<HomeView> {
                                 MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
                               ),
                             ),
-                          ).animate().fadeIn(delay: (600 + (index * 50)).ms).slideY(begin: 0.1);
+                          );
                         },
-                        childCount: state.latestPosts.length + (state.isLoadingMore ? 1 : 0),
+                        childCount: state.latestPosts.length,
                       ),
                     ),
                   ),

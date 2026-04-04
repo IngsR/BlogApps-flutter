@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:blogapps/core/theme/app_effects.dart';
+import 'package:blogapps/core/common/widgets/atoms/gradient_text.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_event.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_state.dart';
@@ -63,6 +64,7 @@ class SettingsPage extends StatelessWidget {
           
           _SectionTitle(title: 'Accessibility'),
           Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -100,6 +102,7 @@ class SettingsPage extends StatelessWidget {
           
           _SectionTitle(title: 'About the Author'),
           Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(

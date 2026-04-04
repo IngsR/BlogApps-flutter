@@ -10,6 +10,8 @@ class GlassCard extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Border? border;
 
+  final Color? color;
+
   const GlassCard({
     super.key,
     required this.child,
@@ -18,6 +20,7 @@ class GlassCard extends StatelessWidget {
     this.padding,
     this.borderRadius,
     this.border,
+    this.color,
   });
 
   @override
@@ -34,39 +37,13 @@ class GlassCard extends StatelessWidget {
           height: height,
           padding: padding,
           decoration: BoxDecoration(
-            color: effects.glassColor,
+            color: color ?? effects.glassColor,
             borderRadius: radius,
             border: border ?? Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1)),
           ),
           child: child,
         ),
       ),
-    );
-  }
-}
-
-class GradientText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final Gradient? gradient;
-
-  const GradientText(
-    this.text, {
-    super.key,
-    this.style,
-    this.gradient,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final effects = Theme.of(context).extension<AppEffects>()!;
-    
-    return ShaderMask(
-      blendMode: BlendMode.srcIn,
-      shaderCallback: (bounds) => (gradient ?? effects.textGradient).createShader(
-        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-      ),
-      child: Text(text, style: style),
     );
   }
 }

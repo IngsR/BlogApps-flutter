@@ -1,10 +1,10 @@
+import 'package:blogapps/core/common/widgets/atoms/gradient_text.dart';
+import 'package:blogapps/core/common/widgets/organisms/post_list_card.dart';
+import 'package:blogapps/features/post_detail/presentation/pages/post_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:blogapps/core/theme/app_effects.dart';
 import 'package:blogapps/features/bookmarks/presentation/bloc/bookmark_bloc.dart';
-import 'package:blogapps/features/home/presentation/widgets/post_list_card.dart';
-import 'package:blogapps/features/post_detail/presentation/pages/post_detail_page.dart';
 
 class BookmarkPage extends StatelessWidget {
   const BookmarkPage({super.key});
@@ -59,8 +59,7 @@ class BookmarkPage extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             itemCount: state.bookmarks.length,
             itemBuilder: (context, index) {
-              final bookmark = state.bookmarks[index];
-              final post = bookmark.toBlogPost();
+              final post = state.bookmarks[index];
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),

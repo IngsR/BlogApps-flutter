@@ -6,9 +6,15 @@ class HomeShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: baseColor,
+      highlightColor: highlightColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -18,7 +24,7 @@ class HomeShimmer extends StatelessWidget {
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
             ),
           ),
           ...List.generate(3, (index) => Padding(
@@ -30,7 +36,7 @@ class HomeShimmer extends StatelessWidget {
                   height: 100,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -38,9 +44,11 @@ class HomeShimmer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(height: 16, color: Colors.white),
+                      Container(height: 16, width: double.infinity, color: Colors.white),
                       const SizedBox(height: 8),
                       Container(height: 12, width: 150, color: Colors.white),
+                      const SizedBox(height: 16),
+                      Container(height: 12, width: 100, color: Colors.white),
                     ],
                   ),
                 ),

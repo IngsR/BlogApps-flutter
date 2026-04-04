@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:blogapps/features/home/data/models/blog_post_model.dart';
+import 'package:blogapps/core/common/entities/blog_post.dart';
 
 part 'bookmark_model.g.dart';
 
@@ -39,6 +39,18 @@ class Bookmark extends HiveObject {
       imageUrl: imageUrl,
       createdAt: createdAt,
       authorName: authorName,
+    );
+  }
+
+  static Bookmark fromBlogPost(BlogPost post) {
+    return Bookmark(
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      imageUrl: post.imageUrl,
+      content: post.content,
+      createdAt: post.createdAt,
+      authorName: post.authorName,
     );
   }
 }

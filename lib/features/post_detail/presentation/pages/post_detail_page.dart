@@ -1,18 +1,21 @@
+import 'package:blogapps/core/common/entities/blog_post.dart';
+import 'package:blogapps/core/common/entities/category.dart';
+import 'package:blogapps/core/common/widgets/atoms/app_badge.dart';
+import 'package:blogapps/core/common/widgets/atoms/app_icon_button.dart';
+import 'package:blogapps/core/common/widgets/atoms/gradient_text.dart';
+import 'package:blogapps/core/common/widgets/molecules/author_tile.dart';
+import 'package:blogapps/core/common/widgets/organisms/post_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:blogapps/features/home/data/models/blog_post_model.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:blogapps/features/bookmarks/presentation/bloc/bookmark_bloc.dart';
-import 'package:blogapps/features/home/data/models/category_model.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_bloc.dart';
-import 'package:blogapps/features/home/presentation/widgets/post_list_card.dart';
 import 'package:blogapps/features/home/presentation/bloc/home_state.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:blogapps/core/theme/app_effects.dart';
 
 class PostDetailPage extends StatefulWidget {
   final BlogPost post;
@@ -25,7 +28,7 @@ class PostDetailPage extends StatefulWidget {
 
 class _PostDetailPageState extends State<PostDetailPage> {
   final ScrollController _scrollController = ScrollController();
-  double _scrollProgress = 0.0;
+  final ValueNotifier<double> _scrollProgress = ValueNotifier<double>(0.0);
 
   @override
   void initState() {
@@ -36,21 +39,19 @@ class _PostDetailPageState extends State<PostDetailPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _scrollProgress.dispose();
     super.dispose();
   }
 
   void _onScroll() {
     if (_scrollController.hasClients) {
       final progress = _scrollController.offset / _scrollController.position.maxScrollExtent;
-      setState(() {
-        _scrollProgress = progress.clamp(0.0, 1.0);
-      });
+      _scrollProgress.value = progress.clamp(0.0, 1.0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final readingTime = (widget.post.content.length / 500).ceil();
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -95,7 +96,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   ),
                 ),
                 actions: [
-                  _CircleActionButton(
+                  AppIconButton(
                     icon: Icons.link_rounded,
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: 'Check out this post: ${widget.post.title}\n\nRead more at: https://myblog.com/posts/${widget.post.slug}'));
@@ -111,7 +112,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     },
                   ),
                   const SizedBox(width: 8),
-                  _CircleActionButton(
+                  AppIconButton(
                     icon: Icons.share_rounded,
                     onPressed: () {
                       HapticFeedback.mediumImpact();
@@ -124,14 +125,14 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   BlocBuilder<BookmarkBloc, BookmarkState>(
                     builder: (context, state) {
                       final isBookmarked = state.bookmarks.any((b) => b.id == widget.post.id);
-                      return _CircleActionButton(
+                      return AppIconButton(
                         icon: isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
                         iconColor: isBookmarked ? Colors.amber : null,
                         onPressed: () {
                           HapticFeedback.mediumImpact();
                           context.read<BookmarkBloc>().add(
                                 ToggleBookmark(
-                                  widget.post.toBookmark(),
+                                  widget.post,
                                 ),
                               );
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -161,21 +162,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             (c) => c.id == widget.post.categoryId,
                             orElse: () => const Category(id: '', name: 'General', slug: 'general'),
                           );
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              category.name.toUpperCase(),
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
+                          return AppBadge(
+                            label: category.name,
+                            onTap: () {
+                              context.read<HomeBloc>().add(HomeFilterByCategory(category.id));
+                              Navigator.pop(context);
+                            },
                           );
                         },
                       ).animate().fadeIn(delay: 200.ms),
@@ -188,86 +180,50 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
                       ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
                       const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundImage: widget.post.authorAvatar != null 
-                              ? NetworkImage(widget.post.authorAvatar!) 
-                              : null,
-                            child: widget.post.authorAvatar == null 
-                              ? const Icon(Icons.person, size: 24) 
-                              : null,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.post.authorName ?? 'Anonymous',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  '${DateFormat.yMMMMd().format(widget.post.createdAt)} • $readingTime min read',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              side: BorderSide(color: theme.colorScheme.primary),
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                            ),
-                            child: const Text('Follow'),
-                          ),
-                        ],
+                      AuthorTile(
+                        authorName: widget.post.authorName,
+                        authorAvatar: widget.post.authorAvatar,
+                        subtitle: '${DateFormat.yMMMMd().format(widget.post.createdAt)} • ${widget.post.readingTime} min read',
+                        onFollowPressed: () {},
                       ).animate().fadeIn(delay: 400.ms),
                       const SizedBox(height: 24),
                       const Divider(),
                       const SizedBox(height: 24),
-                      MarkdownBody(
-                        data: widget.post.content,
-                        selectable: true,
-                        styleSheet: MarkdownStyleSheet(
-                          p: theme.textTheme.bodyLarge?.copyWith(
-                            height: 1.8,
-                            fontSize: 18,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
-                          ),
-                          h1: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
-                          h2: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
-                          code: TextStyle(
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                            fontFamily: 'monospace',
-                            fontSize: 14,
-                          ),
-                          codeblockDecoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
-                          ),
-                          blockquote: TextStyle(
-                            color: theme.colorScheme.primary,
-                            fontStyle: FontStyle.italic,
-                            fontSize: 18,
-                          ),
-                          blockquoteDecoration: BoxDecoration(
-                            border: Border(
-                              left: BorderSide(color: theme.colorScheme.primary, width: 4),
+                      RepaintBoundary(
+                        child: MarkdownBody(
+                          data: widget.post.content,
+                          selectable: true,
+                          styleSheet: MarkdownStyleSheet(
+                            p: theme.textTheme.bodyLarge?.copyWith(
+                              height: 1.8,
+                              fontSize: 18,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
+                            ),
+                            h1: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
+                            h2: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                            code: TextStyle(
+                              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                              fontFamily: 'monospace',
+                              fontSize: 14,
+                            ),
+                            codeblockDecoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+                            ),
+                            blockquote: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontStyle: FontStyle.italic,
+                              fontSize: 18,
+                            ),
+                            blockquoteDecoration: BoxDecoration(
+                              border: Border(
+                                left: BorderSide(color: theme.colorScheme.primary, width: 4),
+                              ),
                             ),
                           ),
                         ),
-                      ).animate().fadeIn(delay: 600.ms),
+                      ),
                       const SizedBox(height: 48),
                       Text(
                         'Related Posts',
@@ -324,39 +280,21 @@ class _PostDetailPageState extends State<PostDetailPage> {
             child: SafeArea(
               child: PreferredSize(
                 preferredSize: const Size.fromHeight(2),
-                child: LinearProgressIndicator(
-                  value: _scrollProgress,
-                  backgroundColor: Colors.transparent,
-                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-                  minHeight: 3,
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _scrollProgress,
+                  builder: (context, value, _) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+                      minHeight: 3,
+                    );
+                  },
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CircleActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final Color? iconColor;
-
-  const _CircleActionButton({
-    required this.icon,
-    required this.onPressed,
-    this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      borderRadius: BorderRadius.circular(12),
-      child: IconButton(
-        icon: Icon(icon, color: iconColor ?? Colors.white, size: 20),
-        onPressed: onPressed,
       ),
     );
   }

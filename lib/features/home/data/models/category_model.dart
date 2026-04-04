@@ -1,21 +1,39 @@
-import 'package:equatable/equatable.dart';
+// ignore_for_file: overridden_fields
 
-class Category extends Equatable {
+import 'package:blogapps/core/common/entities/category.dart';
+import 'package:hive/hive.dart';
+
+part 'category_model.g.dart';
+
+@HiveType(typeId: 2)
+class CategoryModel extends Category {
+  @override
+  @HiveField(0)
   final String id;
+  
+  @override
+  @HiveField(1)
   final String name;
+  
+  @override
+  @HiveField(2)
   final String slug;
 
-  const Category({
+  const CategoryModel({
     required this.id,
     required this.name,
     required this.slug,
-  });
+  }) : super(
+          id: id,
+          name: name,
+          slug: slug,
+        );
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      slug: json['slug'] as String? ?? '',
+      slug: json['slug'] as String,
     );
   }
 
@@ -26,7 +44,4 @@ class Category extends Equatable {
       'slug': slug,
     };
   }
-
-  @override
-  List<Object?> get props => [id, name, slug];
 }

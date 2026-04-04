@@ -1,16 +1,17 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:blogapps/features/home/data/models/blog_post_model.dart';
 import 'package:blogapps/features/home/data/models/category_model.dart';
 import 'package:blogapps/core/constants/app_constants.dart';
 
 abstract class HomeRemoteDataSource {
-  Future<List<BlogPost>> getLatestPosts({
+  Future<List<BlogPostModel>> getLatestPosts({
     int offset = 0, 
     int limit = 10,
     String? categoryId,
   });
-  Future<List<BlogPost>> getFeaturedPosts();
-  Future<List<Category>> getCategories();
+  Future<List<BlogPostModel>> getFeaturedPosts();
+  Future<List<CategoryModel>> getCategories();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -19,7 +20,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   HomeRemoteDataSourceImpl(this.client);
 
   @override
-  Future<List<BlogPost>> getLatestPosts({
+  Future<List<BlogPostModel>> getLatestPosts({
     int offset = 0, 
     int limit = 10,
     String? categoryId,
@@ -34,11 +35,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     
     final response = await query.order('created_at', ascending: false).range(offset, offset + limit - 1);
     
-    return (response as List).map((json) => BlogPost.fromJson(json)).toList();
+    return compute(_parsePosts, response as List<dynamic>);
   }
 
   @override
-  Future<List<BlogPost>> getFeaturedPosts() async {
+  Future<List<BlogPostModel>> getFeaturedPosts() async {
     final response = await client
         .from(AppConstants.postsTable)
         .select('*, profiles(name, avatar_url)')
@@ -46,16 +47,20 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         .order('created_at', ascending: false)
         .limit(5);
     
-    return (response as List).map((json) => BlogPost.fromJson(json)).toList();
+    return compute(_parsePosts, response as List<dynamic>);
   }
 
   @override
-  Future<List<Category>> getCategories() async {
+  Future<List<CategoryModel>> getCategories() async {
     final response = await client
         .from(AppConstants.categoriesTable)
         .select('*')
         .order('name');
     
-    return (response as List).map((json) => Category.fromJson(json)).toList();
+    return (response as List).map((json) => CategoryModel.fromJson(json)).toList();
+  }
+
+  static List<BlogPostModel> _parsePosts(List<dynamic> jsonList) {
+    return jsonList.map((json) => BlogPostModel.fromJson(json as Map<String, dynamic>)).toList();
   }
 }
