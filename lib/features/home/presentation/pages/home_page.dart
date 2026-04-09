@@ -14,6 +14,9 @@ import 'package:blogapps/features/search/presentation/pages/search_page.dart';
 import 'package:blogapps/features/bookmarks/presentation/pages/bookmark_page.dart';
 import 'package:blogapps/features/settings/presentation/pages/settings_page.dart';
 
+import 'package:blogapps/features/home/presentation/widgets/home_bottom_nav.dart';
+import 'package:blogapps/features/home/presentation/widgets/home_state_views.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -53,19 +56,19 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _BottomNavItem(
+                HomeBottomNavItem(
                   icon: Icons.grid_view_rounded,
                   label: 'Feed',
                   isSelected: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
-                _BottomNavItem(
+                HomeBottomNavItem(
                   icon: Icons.bookmark_rounded,
                   label: 'Saved',
                   isSelected: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
-                _BottomNavItem(
+                HomeBottomNavItem(
                   icon: Icons.settings_rounded,
                   label: 'Settings',
                   isSelected: _currentIndex == 2,
@@ -246,187 +249,50 @@ class _HomeViewState extends State<HomeView> {
                 if (state.status == HomeStatus.loading &&
                     state.latestPosts.isEmpty)
                   const SliverFillRemaining(child: HomeShimmer())
-                else if (state.status == HomeStatus.failure &&
-                    state.latestPosts.isEmpty)
-                  SliverFillRemaining(
-                    child: _ErrorView(
+                else if (state.status == HomeStatus.failure)
+                  SliverToBoxAdapter(
+                    child: HomeErrorView(
                       message: state.errorMessage ?? 'Gagal memuat data',
-                      onRetry: () =>
-                          context.read<HomeBloc>().add(HomeFetchData()),
+                      onRetry: () {
+                        context.read<HomeBloc>().add(HomeFetchData());
+                      },
                     ),
                   )
-                else if (state.status == HomeStatus.success &&
-                    state.latestPosts.isEmpty)
-                  const SliverFillRemaining(child: _EmptyView())
+                else if (state.latestPosts.isEmpty &&
+                    state.status == HomeStatus.success)
+                  const SliverToBoxAdapter(
+                    child: HomeEmptyView(),
+                  )
                 else
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final post = state.latestPosts[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: PostListCard(
-                            post: post,
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PostDetailPage(post: post),
+                  ...[
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final post = state.latestPosts[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: PostListCard(
+                              post: post,
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PostDetailPage(post: post)),
                               ),
                             ),
-                          ),
-                        );
-                      }, childCount: state.latestPosts.length),
+                          ).animate().fadeIn(delay: (index * 50).ms).slideX(
+                                begin: 0.1,
+                              );
+                        }, childCount: state.latestPosts.length),
+                      ),
                     ),
-                  ),
-                const SliverToBoxAdapter(child: SizedBox(height: 40)),
+                  ],
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
               ],
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _BottomNavItem({
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = isSelected
-        ? theme.colorScheme.primary
-        : theme.colorScheme.onSurface.withValues(alpha: 0.6);
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 24),
-            if (isSelected) ...[
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: theme.colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Waduh! Ada Masalah',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: onRetry,
-            icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Coba Lagi'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyView extends StatelessWidget {
-  const _EmptyView();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.article_outlined,
-            size: 64,
-            color: theme.colorScheme.primary.withValues(alpha: 0.4),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Belum Ada Konten',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Sepertinya belum ada artikel yang dipublikasikan untuk kategori ini.',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
       ),
     );
   }

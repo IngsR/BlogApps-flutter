@@ -70,6 +70,7 @@ class FeaturedPostCard extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [Colors.transparent, Colors.black87],
+                        stops: [0.3, 1.0],
                       ),
                     ),
                   ),

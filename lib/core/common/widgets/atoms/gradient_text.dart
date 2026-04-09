@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:blogapps/core/theme/app_theme.dart';
 
 class GradientText extends StatelessWidget {
   final String text;
@@ -10,13 +11,11 @@ class GradientText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultGradient = LinearGradient(
-      colors: [
-        theme.colorScheme.primary,
-        theme.colorScheme.secondary,
-        theme.colorScheme.tertiary,
-      ],
-    );
+    final appEffects = theme.extension<AppEffects>();
+    final defaultGradient = appEffects?.textGradient ??
+        LinearGradient(
+          colors: [theme.colorScheme.primary, theme.colorScheme.primary],
+        );
 
     return ShaderMask(
       blendMode: BlendMode.srcIn,

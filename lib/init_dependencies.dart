@@ -35,10 +35,12 @@ Future<void> _initHive() async {
   await Hive.initFlutter();
 
   if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(BookmarkAdapter());
-  if (!Hive.isAdapterRegistered(1))
+  if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(BlogPostModelAdapter());
-  if (!Hive.isAdapterRegistered(2))
+  }
+  if (!Hive.isAdapterRegistered(2)) {
     Hive.registerAdapter(CategoryModelAdapter());
+  }
 
   final latestPostsBox = await Hive.openBox<BlogPostModel>('latest_posts_box');
   final featuredPostsBox = await Hive.openBox<BlogPostModel>(
