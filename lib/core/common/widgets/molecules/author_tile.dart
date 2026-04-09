@@ -21,12 +21,12 @@ class AuthorTile extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundImage: authorAvatar != null 
-            ? NetworkImage(authorAvatar!) 
-            : null,
-          child: authorAvatar == null 
-            ? const Icon(Icons.person, size: 24) 
-            : null,
+          backgroundImage: authorAvatar != null
+              ? NetworkImage(authorAvatar!)
+              : null,
+          child: authorAvatar == null
+              ? const Icon(Icons.person, size: 24)
+              : null,
         ),
         const SizedBox(width: 12),
         Expanded(

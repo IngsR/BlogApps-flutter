@@ -12,12 +12,12 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<List<BlogPost>> getLatestPosts({
-    int offset = 0, 
+    int offset = 0,
     int limit = 10,
     String? categoryId,
   }) async {
     final posts = await remoteDataSource.getLatestPosts(
-      offset: offset, 
+      offset: offset,
       limit: limit,
       categoryId: categoryId,
     );

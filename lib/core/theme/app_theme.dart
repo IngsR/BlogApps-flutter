@@ -43,10 +43,22 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: backgroundLight,
       textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme).copyWith(
-        displayLarge: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: foregroundLight),
-        displayMedium: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: foregroundLight),
-        titleLarge: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: foregroundLight),
-        bodyLarge: GoogleFonts.inter(color: foregroundLight.withValues(alpha: 0.9), fontSize: 16),
+        displayLarge: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.w800,
+          color: foregroundLight,
+        ),
+        displayMedium: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.bold,
+          color: foregroundLight,
+        ),
+        titleLarge: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.bold,
+          color: foregroundLight,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          color: foregroundLight.withValues(alpha: 0.9),
+          fontSize: 16,
+        ),
         bodyMedium: GoogleFonts.inter(color: mutedForegroundLight),
       ),
       appBarTheme: AppBarTheme(
@@ -105,10 +117,22 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: backgroundDark,
       textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme).copyWith(
-        displayLarge: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: foregroundDark),
-        displayMedium: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: foregroundDark),
-        titleLarge: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: foregroundDark),
-        bodyLarge: GoogleFonts.inter(color: foregroundDark.withValues(alpha: 0.9), fontSize: 16),
+        displayLarge: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.w800,
+          color: foregroundDark,
+        ),
+        displayMedium: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.bold,
+          color: foregroundDark,
+        ),
+        titleLarge: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.bold,
+          color: foregroundDark,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          color: foregroundDark.withValues(alpha: 0.9),
+          fontSize: 16,
+        ),
         bodyMedium: GoogleFonts.inter(color: mutedForegroundDark),
       ),
       appBarTheme: AppBarTheme(

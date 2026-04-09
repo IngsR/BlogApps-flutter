@@ -31,7 +31,10 @@ class GlassCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: radius,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: effects.glassBlur, sigmaY: effects.glassBlur),
+        filter: ImageFilter.blur(
+          sigmaX: effects.glassBlur,
+          sigmaY: effects.glassBlur,
+        ),
         child: Container(
           width: width,
           height: height,
@@ -39,7 +42,13 @@ class GlassCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: color ?? effects.glassColor,
             borderRadius: radius,
-            border: border ?? Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1)),
+            border:
+                border ??
+                Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.1),
+                ),
           ),
           child: child,
         ),
@@ -58,9 +67,7 @@ class AnimatedHeroBackground extends StatelessWidget {
     final effects = Theme.of(context).extension<AppEffects>()!;
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: effects.heroGradient,
-      ),
+      decoration: BoxDecoration(gradient: effects.heroGradient),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),

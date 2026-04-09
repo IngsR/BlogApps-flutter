@@ -44,16 +44,16 @@ class BlogPost extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        slug,
-        content,
-        imageUrl,
-        categoryId,
-        isFeatured,
-        createdAt,
-        authorId,
-        authorName,
-        authorAvatar,
-      ];
+    id,
+    title,
+    slug,
+    content,
+    imageUrl,
+    categoryId,
+    isFeatured,
+    createdAt,
+    authorId,
+    authorName,
+    authorAvatar,
+  ];
 }

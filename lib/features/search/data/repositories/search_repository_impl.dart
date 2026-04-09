@@ -18,6 +18,8 @@ class SearchRepositoryImpl implements SearchRepository {
         .order('created_at', ascending: false)
         .limit(20);
 
-    return (response as List).map((json) => BlogPostModel.fromJson(json)).toList();
+    return (response as List)
+        .map((json) => BlogPostModel.fromJson(json))
+        .toList();
   }
 }

@@ -35,10 +35,7 @@ class _HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
@@ -158,12 +155,18 @@ class _HomeViewState extends State<HomeView> {
                     IconButton(
                       onPressed: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SearchPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const SearchPage(),
+                        ),
                       ),
                       icon: GlassCard(
                         padding: const EdgeInsets.all(8),
                         borderRadius: BorderRadius.circular(12),
-                        child: Icon(Icons.search_rounded, color: theme.colorScheme.primary, size: 20),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 20,
+                        ),
                       ),
                     ).animate().fadeIn(duration: 800.ms).scale(),
                     const SizedBox(width: 16),
@@ -178,7 +181,9 @@ class _HomeViewState extends State<HomeView> {
                         categories: state.categories,
                         selectedCategoryId: state.selectedCategoryId,
                         onCategorySelected: (id) {
-                          context.read<HomeBloc>().add(HomeFilterByCategory(id));
+                          context.read<HomeBloc>().add(
+                            HomeFilterByCategory(id),
+                          );
                         },
                       ).animate().fadeIn(delay: 200.ms),
                       if (state.featuredPosts.isNotEmpty) ...[
@@ -187,9 +192,16 @@ class _HomeViewState extends State<HomeView> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Featured Stories', 
-                                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                              TextButton(onPressed: () {}, child: const Text('See all')),
+                              Text(
+                                'Featured Stories',
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: const Text('See all'),
+                              ),
                             ],
                           ),
                         ).animate().fadeIn(delay: 300.ms),
@@ -198,7 +210,9 @@ class _HomeViewState extends State<HomeView> {
                             height: 260,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               itemCount: state.featuredPosts.length,
                               itemBuilder: (context, index) {
                                 final post = state.featuredPosts[index];
@@ -206,7 +220,10 @@ class _HomeViewState extends State<HomeView> {
                                   post: post,
                                   onTap: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PostDetailPage(post: post),
+                                    ),
                                   ),
                                 );
                               },
@@ -216,43 +233,51 @@ class _HomeViewState extends State<HomeView> {
                       ],
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
-                        child: Text('Latest Updates', 
-                          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        child: Text(
+                          'Latest Updates',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ).animate().fadeIn(delay: 500.ms),
                     ],
                   ),
                 ),
-                if (state.status == HomeStatus.loading && state.latestPosts.isEmpty)
+                if (state.status == HomeStatus.loading &&
+                    state.latestPosts.isEmpty)
                   const SliverFillRemaining(child: HomeShimmer())
-                else if (state.status == HomeStatus.failure && state.latestPosts.isEmpty)
+                else if (state.status == HomeStatus.failure &&
+                    state.latestPosts.isEmpty)
                   SliverFillRemaining(
                     child: _ErrorView(
                       message: state.errorMessage ?? 'Gagal memuat data',
-                      onRetry: () => context.read<HomeBloc>().add(HomeFetchData()),
+                      onRetry: () =>
+                          context.read<HomeBloc>().add(HomeFetchData()),
                     ),
                   )
-                else if (state.status == HomeStatus.success && state.latestPosts.isEmpty)
+                else if (state.status == HomeStatus.success &&
+                    state.latestPosts.isEmpty)
                   const SliverFillRemaining(child: _EmptyView())
                 else
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final post = state.latestPosts[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: PostListCard(
-                              post: post,
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PostDetailPage(post: post)),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final post = state.latestPosts[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: PostListCard(
+                            post: post,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PostDetailPage(post: post),
                               ),
                             ),
-                          );
-                        },
-                        childCount: state.latestPosts.length,
-                      ),
+                          ),
+                        );
+                      }, childCount: state.latestPosts.length),
                     ),
                   ),
                 const SliverToBoxAdapter(child: SizedBox(height: 40)),
@@ -281,8 +306,8 @@ class _BottomNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = isSelected 
-        ? theme.colorScheme.primary 
+    final color = isSelected
+        ? theme.colorScheme.primary
         : theme.colorScheme.onSurface.withValues(alpha: 0.6);
 
     return GestureDetector(
@@ -292,7 +317,9 @@ class _BottomNavItem extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -302,7 +329,11 @@ class _BottomNavItem extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ],
           ],
@@ -326,17 +357,25 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline_rounded, size: 64, color: theme.colorScheme.error),
+          Icon(
+            Icons.error_outline_rounded,
+            size: 64,
+            color: theme.colorScheme.error,
+          ),
           const SizedBox(height: 16),
           Text(
             'Waduh! Ada Masalah',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             message,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -345,7 +384,9 @@ class _ErrorView extends StatelessWidget {
             label: const Text('Coba Lagi'),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -365,17 +406,25 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.article_outlined, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
+          Icon(
+            Icons.article_outlined,
+            size: 64,
+            color: theme.colorScheme.primary.withValues(alpha: 0.4),
+          ),
           const SizedBox(height: 16),
           Text(
             'Belum Ada Konten',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Sepertinya belum ada artikel yang dipublikasikan untuk kategori ini.',
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ),
         ],
       ),

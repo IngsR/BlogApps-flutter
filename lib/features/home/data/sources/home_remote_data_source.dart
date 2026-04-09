@@ -6,7 +6,7 @@ import 'package:blogapps/core/constants/app_constants.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<BlogPostModel>> getLatestPosts({
-    int offset = 0, 
+    int offset = 0,
     int limit = 10,
     String? categoryId,
   });
@@ -21,7 +21,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
   @override
   Future<List<BlogPostModel>> getLatestPosts({
-    int offset = 0, 
+    int offset = 0,
     int limit = 10,
     String? categoryId,
   }) async {
@@ -32,9 +32,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     if (categoryId != null) {
       query = query.eq('category_id', categoryId);
     }
-    
-    final response = await query.order('created_at', ascending: false).range(offset, offset + limit - 1);
-    
+
+    final response = await query
+        .order('created_at', ascending: false)
+        .range(offset, offset + limit - 1);
+
     return compute(_parsePosts, response as List<dynamic>);
   }
 
@@ -46,7 +48,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         .eq('is_featured', true)
         .order('created_at', ascending: false)
         .limit(5);
-    
+
     return compute(_parsePosts, response as List<dynamic>);
   }
 
@@ -56,11 +58,15 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         .from(AppConstants.categoriesTable)
         .select('*')
         .order('name');
-    
-    return (response as List).map((json) => CategoryModel.fromJson(json)).toList();
+
+    return (response as List)
+        .map((json) => CategoryModel.fromJson(json))
+        .toList();
   }
 
   static List<BlogPostModel> _parsePosts(List<dynamic> jsonList) {
-    return jsonList.map((json) => BlogPostModel.fromJson(json as Map<String, dynamic>)).toList();
+    return jsonList
+        .map((json) => BlogPostModel.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }

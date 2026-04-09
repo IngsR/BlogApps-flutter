@@ -14,7 +14,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchPosts>(_onSearchPosts);
   }
 
-  Future<void> _onSearchPosts(SearchPosts event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchPosts(
+    SearchPosts event,
+    Emitter<SearchState> emit,
+  ) async {
     if (event.query.isEmpty) {
       emit(state.copyWith(status: SearchStatus.initial, posts: []));
       return;
@@ -26,7 +29,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final posts = await repository.searchPosts(event.query);
       emit(state.copyWith(status: SearchStatus.success, posts: posts));
     } catch (e) {
-      emit(state.copyWith(status: SearchStatus.failure, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: SearchStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

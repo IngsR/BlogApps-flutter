@@ -19,10 +19,10 @@ class AppBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBgColor = isSelected 
-        ? theme.colorScheme.primary 
+    final effectiveBgColor = isSelected
+        ? theme.colorScheme.primary
         : backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.1);
-    
+
     final effectiveTextColor = isSelected
         ? Colors.white
         : textColor ?? theme.colorScheme.primary;

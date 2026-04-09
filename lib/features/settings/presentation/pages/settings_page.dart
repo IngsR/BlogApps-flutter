@@ -25,7 +25,9 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          _SectionTitle(title: 'Personalization').animate().fadeIn(delay: 200.ms),
+          _SectionTitle(
+            title: 'Personalization',
+          ).animate().fadeIn(delay: 200.ms),
           BlocBuilder<SettingsBloc, SettingsState>(
             builder: (context, state) {
               return GlassCard(
@@ -39,21 +41,27 @@ class SettingsPage extends StatelessWidget {
                       icon: Icons.light_mode_rounded,
                       label: 'Light',
                       isSelected: state.themeMode == ThemeMode.light,
-                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.light)),
+                      onTap: () => context.read<SettingsBloc>().add(
+                        SettingsUpdateTheme(ThemeMode.light),
+                      ),
                     ),
                     ThemeSelectionCard(
                       mode: ThemeMode.dark,
                       icon: Icons.dark_mode_rounded,
                       label: 'Dark',
                       isSelected: state.themeMode == ThemeMode.dark,
-                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.dark)),
+                      onTap: () => context.read<SettingsBloc>().add(
+                        SettingsUpdateTheme(ThemeMode.dark),
+                      ),
                     ),
                     ThemeSelectionCard(
                       mode: ThemeMode.system,
                       icon: Icons.settings_brightness_rounded,
                       label: 'System',
                       isSelected: state.themeMode == ThemeMode.system,
-                      onTap: () => context.read<SettingsBloc>().add(SettingsUpdateTheme(ThemeMode.system)),
+                      onTap: () => context.read<SettingsBloc>().add(
+                        SettingsUpdateTheme(ThemeMode.system),
+                      ),
                     ),
                   ],
                 ),
@@ -61,10 +69,12 @@ class SettingsPage extends StatelessWidget {
             },
           ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
           const SizedBox(height: 24),
-          
+
           _SectionTitle(title: 'Accessibility'),
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -73,11 +83,16 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       const Icon(Icons.format_size_rounded),
                       const SizedBox(width: 16),
-                      const Text('Text Scale', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Text Scale',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const Spacer(),
                       BlocBuilder<SettingsBloc, SettingsState>(
                         builder: (context, state) {
-                          return Text('${((1.0 + state.fontSizeDelta) * 100).toInt()}%');
+                          return Text(
+                            '${((1.0 + state.fontSizeDelta) * 100).toInt()}%',
+                          );
                         },
                       ),
                     ],
@@ -89,7 +104,9 @@ class SettingsPage extends StatelessWidget {
                         min: -0.2,
                         max: 0.5,
                         onChanged: (value) {
-                          context.read<SettingsBloc>().add(SettingsUpdateFontSize(value));
+                          context.read<SettingsBloc>().add(
+                            SettingsUpdateFontSize(value),
+                          );
                         },
                       );
                     },
@@ -99,17 +116,21 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          
+
           _SectionTitle(title: 'About the Author'),
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   const CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=admin'),
+                    backgroundImage: NetworkImage(
+                      'https://i.pravatar.cc/150?u=admin',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -136,7 +157,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          
+
           _SectionTitle(title: 'App Info'),
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),
@@ -153,7 +174,10 @@ class SettingsPage extends StatelessWidget {
           Center(
             child: Text(
               'Made with ♥ using Flutter',
-              style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 12),
+              style: TextStyle(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
             ),
           ),
           const SizedBox(height: 20),

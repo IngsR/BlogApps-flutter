@@ -8,11 +8,7 @@ class PostListCard extends StatelessWidget {
   final BlogPost post;
   final VoidCallback onTap;
 
-  const PostListCard({
-    super.key,
-    required this.post,
-    required this.onTap,
-  });
+  const PostListCard({super.key, required this.post, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +37,40 @@ class PostListCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: CachedNetworkImage(
-                  imageUrl: post.imageUrl ?? 'https://via.placeholder.com/150',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  memCacheWidth: 300, // Optimization
-                  placeholder: (context, url) => Container(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                  ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
+                child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: post.imageUrl!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        memCacheWidth: 300,
+                        placeholder: (context, url) => Container(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          child: const Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          child: Icon(
+                            Icons.image_not_supported_outlined,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -69,7 +88,7 @@ class PostListCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     BlogMetaInfo(
-                      date: DateFormat.yMMMMd().format(post.createdAt),
+                      date: DateFormat.yMMMMd('id').format(post.createdAt),
                       readingTime: post.readingTime,
                     ),
                   ],

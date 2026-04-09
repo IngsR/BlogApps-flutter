@@ -24,10 +24,10 @@ class CategoryTabs extends StatelessWidget {
         itemBuilder: (context, index) {
           final isAll = index == 0;
           final category = isAll ? null : categories[index - 1];
-          final isSelected = isAll 
-              ? selectedCategoryId == null 
+          final isSelected = isAll
+              ? selectedCategoryId == null
               : selectedCategoryId == category?.id;
-          
+
           return Padding(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
             child: _CategoryChip(
@@ -57,11 +57,11 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
-    final unselectedBg = isDark 
+
+    final unselectedBg = isDark
         ? Colors.white.withValues(alpha: 0.1)
         : Colors.white;
-    
+
     final textColor = isDark
         ? (isSelected ? Colors.white : Colors.white.withValues(alpha: 0.9))
         : (isSelected ? Colors.white : theme.colorScheme.onSurface);
@@ -76,18 +76,22 @@ class _CategoryChip extends StatelessWidget {
           color: isSelected ? theme.colorScheme.primary : unselectedBg,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: isSelected 
-                ? theme.colorScheme.primary 
-                : (isDark ? Colors.white.withValues(alpha: 0.1) : theme.colorScheme.outlineVariant),
+            color: isSelected
+                ? theme.colorScheme.primary
+                : (isDark
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : theme.colorScheme.outlineVariant),
             width: 1,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            )
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Center(
           child: Text(

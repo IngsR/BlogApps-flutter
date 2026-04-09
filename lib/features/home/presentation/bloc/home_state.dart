@@ -37,7 +37,9 @@ class HomeState extends Equatable {
       latestPosts: latestPosts ?? this.latestPosts,
       featuredPosts: featuredPosts ?? this.featuredPosts,
       categories: categories ?? this.categories,
-      selectedCategoryId: selectedCategoryId != null ? selectedCategoryId() : this.selectedCategoryId,
+      selectedCategoryId: selectedCategoryId != null
+          ? selectedCategoryId()
+          : this.selectedCategoryId,
       errorMessage: errorMessage ?? this.errorMessage,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
@@ -45,12 +47,12 @@ class HomeState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        latestPosts,
-        featuredPosts,
-        categories,
-        selectedCategoryId,
-        errorMessage,
-        hasReachedMax,
-      ];
+    status,
+    latestPosts,
+    featuredPosts,
+    categories,
+    selectedCategoryId,
+    errorMessage,
+    hasReachedMax,
+  ];
 }

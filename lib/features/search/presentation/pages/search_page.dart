@@ -12,7 +12,7 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: GlassCard(
@@ -54,9 +54,16 @@ class SearchPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.search_off_rounded, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+                  Icon(
+                    Icons.search_off_rounded,
+                    size: 64,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                  ),
                   const SizedBox(height: 16),
-                  const Text('No posts found.', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'No posts found.',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             );

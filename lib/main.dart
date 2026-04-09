@@ -9,16 +9,18 @@ import 'package:blogapps/features/search/presentation/bloc/search_bloc.dart';
 import 'package:blogapps/features/bookmarks/presentation/bloc/bookmark_bloc.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:blogapps/features/settings/presentation/bloc/settings_state.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  await initializeDateFormatting('id', null);
+
   try {
     await initDependencies();
   } catch (e) {
     debugPrint('Failed to initialize dependencies: $e');
   }
-  
+
   runApp(const MyApp());
 }
 
@@ -29,9 +31,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => serviceLocator<HomeBloc>()..add(HomeFetchData())),
+        BlocProvider(
+          create: (_) => serviceLocator<HomeBloc>()..add(HomeFetchData()),
+        ),
         BlocProvider(create: (_) => serviceLocator<SearchBloc>()),
-        BlocProvider(create: (_) => serviceLocator<BookmarkBloc>()..add(LoadBookmarks())),
+        BlocProvider(
+          create: (_) => serviceLocator<BookmarkBloc>()..add(LoadBookmarks()),
+        ),
         BlocProvider(create: (_) => serviceLocator<SettingsBloc>()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(

@@ -10,11 +10,11 @@ class CategoryModel extends Category {
   @override
   @HiveField(0)
   final String id;
-  
+
   @override
   @HiveField(1)
   final String name;
-  
+
   @override
   @HiveField(2)
   final String slug;
@@ -23,11 +23,7 @@ class CategoryModel extends Category {
     required this.id,
     required this.name,
     required this.slug,
-  }) : super(
-          id: id,
-          name: name,
-          slug: slug,
-        );
+  }) : super(id: id, name: name, slug: slug);
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
@@ -38,10 +34,6 @@ class CategoryModel extends Category {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'slug': slug,
-    };
+    return {'id': id, 'name': name, 'slug': slug};
   }
 }

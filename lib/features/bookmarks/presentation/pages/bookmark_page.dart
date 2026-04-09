@@ -29,11 +29,20 @@ class BookmarkPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.bookmark_border_rounded,
-                    size: 80,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-                    .moveY(begin: -10, end: 10, duration: 2.seconds, curve: Curves.easeInOut),
+                        Icons.bookmark_border_rounded,
+                        size: 80,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                      )
+                      .animate(
+                        onPlay: (controller) =>
+                            controller.repeat(reverse: true),
+                      )
+                      .moveY(
+                        begin: -10,
+                        end: 10,
+                        duration: 2.seconds,
+                        curve: Curves.easeInOut,
+                      ),
                   const SizedBox(height: 24),
                   Text(
                     'No bookmarks yet',
@@ -62,19 +71,22 @@ class BookmarkPage extends StatelessWidget {
               final post = state.bookmarks[index];
 
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: PostListCard(
-                  post: post,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PostDetailPage(post: post),
-                      ),
-                    );
-                  },
-                ),
-              ).animate().fadeIn(delay: (200 + (index * 50)).ms).slideX(begin: 0.1);
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: PostListCard(
+                      post: post,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PostDetailPage(post: post),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(delay: (200 + (index * 50)).ms)
+                  .slideX(begin: 0.1);
             },
           );
         },

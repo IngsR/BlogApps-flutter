@@ -33,22 +33,35 @@ Future<void> initDependencies() async {
 
 Future<void> _initHive() async {
   await Hive.initFlutter();
-  
+
   if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(BookmarkAdapter());
-  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(BlogPostModelAdapter());
-  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(CategoryModelAdapter());
+  if (!Hive.isAdapterRegistered(1))
+    Hive.registerAdapter(BlogPostModelAdapter());
+  if (!Hive.isAdapterRegistered(2))
+    Hive.registerAdapter(CategoryModelAdapter());
 
   final latestPostsBox = await Hive.openBox<BlogPostModel>('latest_posts_box');
-  final featuredPostsBox = await Hive.openBox<BlogPostModel>('featured_posts_box');
+  final featuredPostsBox = await Hive.openBox<BlogPostModel>(
+    'featured_posts_box',
+  );
   final categoriesBox = await Hive.openBox<CategoryModel>('categories_box');
   final bookmarkBox = await Hive.openBox<Bookmark>('bookmarks_box');
   final settingsBox = await Hive.openBox('settings_box');
 
-  serviceLocator.registerLazySingleton<Box<BlogPostModel>>(() => latestPostsBox, instanceName: 'latest_posts');
-  serviceLocator.registerLazySingleton<Box<BlogPostModel>>(() => featuredPostsBox, instanceName: 'featured_posts');
+  serviceLocator.registerLazySingleton<Box<BlogPostModel>>(
+    () => latestPostsBox,
+    instanceName: 'latest_posts',
+  );
+  serviceLocator.registerLazySingleton<Box<BlogPostModel>>(
+    () => featuredPostsBox,
+    instanceName: 'featured_posts',
+  );
   serviceLocator.registerLazySingleton<Box<CategoryModel>>(() => categoriesBox);
   serviceLocator.registerLazySingleton<Box<Bookmark>>(() => bookmarkBox);
-  serviceLocator.registerLazySingleton<Box>(() => settingsBox, instanceName: 'settings');
+  serviceLocator.registerLazySingleton<Box>(
+    () => settingsBox,
+    instanceName: 'settings',
+  );
 }
 
 Future<void> _initSupabase() async {

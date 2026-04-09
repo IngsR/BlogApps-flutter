@@ -8,11 +8,7 @@ class FeaturedPostCard extends StatelessWidget {
   final BlogPost post;
   final VoidCallback onTap;
 
-  const FeaturedPostCard({
-    super.key,
-    required this.post,
-    required this.onTap,
-  });
+  const FeaturedPostCard({super.key, required this.post, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +33,35 @@ class FeaturedPostCard extends StatelessWidget {
             child: Stack(
               children: [
                 Hero(
-                  tag: 'feat_${post.id}',
-                  child: CachedNetworkImage(
-                    imageUrl: post.imageUrl ?? 'https://via.placeholder.com/600x400',
-                    height: double.infinity,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 800, // Optimization
-                  ),
+                  tag: 'post_${post.id}',
+                  child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: post.imageUrl!,
+                          height: double.infinity,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          memCacheWidth: 800,
+                          placeholder: (context, url) =>
+                              Container(color: Colors.grey.shade200),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(
+                              Icons.image_not_supported_outlined,
+                              size: 40,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          color: Colors.grey.shade200,
+                          child: const Icon(
+                            Icons.image_not_supported_outlined,
+                            size: 40,
+                            color: Colors.grey,
+                          ),
+                        ),
                 ),
                 Positioned.fill(
                   child: Container(
@@ -75,7 +92,7 @@ class FeaturedPostCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       BlogMetaInfo(
-                        date: DateFormat.yMMMMd().format(post.createdAt),
+                        date: DateFormat.yMMMMd('id').format(post.createdAt),
                         readingTime: post.readingTime,
                         color: Colors.white70,
                       ),

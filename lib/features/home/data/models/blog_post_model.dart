@@ -10,43 +10,43 @@ class BlogPostModel extends BlogPost {
   @override
   @HiveField(0)
   final String id;
-  
+
   @override
   @HiveField(1)
   final String title;
-  
+
   @override
   @HiveField(2)
   final String slug;
-  
+
   @override
   @HiveField(3)
   final String content;
-  
+
   @override
   @HiveField(4)
   final String? imageUrl;
-  
+
   @override
   @HiveField(5)
   final String? categoryId;
-  
+
   @override
   @HiveField(6)
   final bool isFeatured;
-  
+
   @override
   @HiveField(7)
   final DateTime createdAt;
-  
+
   @override
   @HiveField(8)
   final String? authorId;
-  
+
   @override
   @HiveField(9)
   final String? authorName;
-  
+
   @override
   @HiveField(10)
   final String? authorAvatar;
@@ -64,18 +64,18 @@ class BlogPostModel extends BlogPost {
     this.authorName,
     this.authorAvatar,
   }) : super(
-          id: id,
-          title: title,
-          slug: slug,
-          content: content,
-          imageUrl: imageUrl,
-          categoryId: categoryId,
-          isFeatured: isFeatured,
-          createdAt: createdAt,
-          authorId: authorId,
-          authorName: authorName,
-          authorAvatar: authorAvatar,
-        );
+         id: id,
+         title: title,
+         slug: slug,
+         content: content,
+         imageUrl: imageUrl,
+         categoryId: categoryId,
+         isFeatured: isFeatured,
+         createdAt: createdAt,
+         authorId: authorId,
+         authorName: authorName,
+         authorAvatar: authorAvatar,
+       );
 
   factory BlogPostModel.fromJson(Map<String, dynamic> json) {
     return BlogPostModel(

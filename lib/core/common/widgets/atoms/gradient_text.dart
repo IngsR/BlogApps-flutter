@@ -5,12 +5,7 @@ class GradientText extends StatelessWidget {
   final TextStyle? style;
   final Gradient? gradient;
 
-  const GradientText(
-    this.text, {
-    super.key,
-    this.style,
-    this.gradient,
-  });
+  const GradientText(this.text, {super.key, this.style, this.gradient});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +23,7 @@ class GradientText extends StatelessWidget {
       shaderCallback: (bounds) => (gradient ?? defaultGradient).createShader(
         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
       ),
-      child: Text(
-        text,
-        style: style,
-      ),
+      child: Text(text, style: style),
     );
   }
 }

@@ -12,49 +12,55 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeFilterByCategory>(_onFilterByCategory);
   }
 
-  Future<void> _onFilterByCategory(HomeFilterByCategory event, Emitter<HomeState> emit) async {
+  Future<void> _onFilterByCategory(
+    HomeFilterByCategory event,
+    Emitter<HomeState> emit,
+  ) async {
     // If selecting the same category, clear filter (Toggle behavior)
-    final newCategoryId = state.selectedCategoryId == event.categoryId ? null : event.categoryId;
-    
-    emit(state.copyWith(
-      status: HomeStatus.loading,
-      selectedCategoryId: () => newCategoryId,
-    ));
+    final newCategoryId = state.selectedCategoryId == event.categoryId
+        ? null
+        : event.categoryId;
+
+    emit(
+      state.copyWith(
+        status: HomeStatus.loading,
+        selectedCategoryId: () => newCategoryId,
+      ),
+    );
 
     try {
-      final posts = await repository.getLatestPosts(
-        categoryId: newCategoryId,
-      );
+      final posts = await repository.getLatestPosts(categoryId: newCategoryId);
 
-      emit(state.copyWith(
-        status: HomeStatus.success,
-        latestPosts: posts,
-      ));
+      emit(state.copyWith(status: HomeStatus.success, latestPosts: posts));
     } catch (e) {
-      emit(state.copyWith(
-        status: HomeStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(status: HomeStatus.failure, errorMessage: e.toString()),
+      );
     }
   }
 
-  Future<void> _onFetchData(HomeFetchData event, Emitter<HomeState> emit) async {
+  Future<void> _onFetchData(
+    HomeFetchData event,
+    Emitter<HomeState> emit,
+  ) async {
     // Reset category when fetching fresh data
-    emit(state.copyWith(
-      selectedCategoryId: () => null,
-    ));
+    emit(state.copyWith(selectedCategoryId: () => null));
     // 1. Return cached data immediately for instant load
     final cachedLatest = repository.getCachedLatestPosts();
     final cachedFeatured = repository.getCachedFeaturedPosts();
     final cachedCategories = repository.getCachedCategories();
 
-    if (cachedLatest.isNotEmpty || cachedFeatured.isNotEmpty || cachedCategories.isNotEmpty) {
-      emit(state.copyWith(
-        status: HomeStatus.success,
-        latestPosts: cachedLatest,
-        featuredPosts: cachedFeatured,
-        categories: cachedCategories,
-      ));
+    if (cachedLatest.isNotEmpty ||
+        cachedFeatured.isNotEmpty ||
+        cachedCategories.isNotEmpty) {
+      emit(
+        state.copyWith(
+          status: HomeStatus.success,
+          latestPosts: cachedLatest,
+          featuredPosts: cachedFeatured,
+          categories: cachedCategories,
+        ),
+      );
     } else {
       emit(state.copyWith(status: HomeStatus.loading));
     }
@@ -65,17 +71,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final featured = await repository.getFeaturedPosts();
       final categories = await repository.getCategories();
 
-      emit(state.copyWith(
-        status: HomeStatus.success,
-        latestPosts: posts,
-        featuredPosts: featured,
-        categories: categories,
-      ));
+      emit(
+        state.copyWith(
+          status: HomeStatus.success,
+          latestPosts: posts,
+          featuredPosts: featured,
+          categories: categories,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: HomeStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(status: HomeStatus.failure, errorMessage: e.toString()),
+      );
     }
   }
 }
