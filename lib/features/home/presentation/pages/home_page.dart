@@ -35,24 +35,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: GlassCard(
+          borderRadius: BorderRadius.circular(30),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: SafeArea(
+            bottom: true,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -149,10 +141,15 @@ class _HomeViewState extends State<HomeView> {
                   floating: true,
                   stretch: true,
                   centerTitle: false,
-                  title: Image.asset(
-                    'assets/BLog.png',
-                    height: 32,
-                    fit: BoxFit.contain,
+                  title: Builder(
+                    builder: (context) {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+                      return Image.asset(
+                        isDark ? 'assets/logo_dark.png' : 'assets/logo_light.png',
+                        height: 32,
+                        fit: BoxFit.contain,
+                      );
+                    },
                   ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
                   actions: [
                     IconButton(
